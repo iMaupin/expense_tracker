@@ -11,26 +11,25 @@ const Expenses = ({ expenses }) => {
     setFilteredYear(year)
     year !== 'None' ? setFiltered(true) : setFiltered(false)
   }
+
+  const filteredExpenses = expenses.filter(expense => (expense.date.getFullYear().toString() === filteredYear))
+  const items = filtered ? filteredExpenses : expenses
+  let expensesContent = <p>No Expenses Found</p>
+  if (items.length > 0) {
+    expensesContent = items.map(expense => (
+      <ExpenseItem
+        key={expense.id}
+        title={expense.title}
+        date={expense.date}
+        amount={expense.amount}
+      />
+    ))
+  }
+
   return (
     <Card className='expenses'>
       <ExpensesFilter onFilterYear={storeFilteredYear} selected={filteredYear} />
-      {!filtered
-        ? expenses.map(expense => (
-          <ExpenseItem
-            key={expense.id}
-            title={expense.title}
-            date={expense.date}
-            amount={expense.amount}
-          />
-          ))
-        : expenses.filter(expense => (expense.date.getFullYear().toString() === filteredYear)).map(expense => (
-          <ExpenseItem
-            key={expense.id}
-            title={expense.title}
-            date={expense.date}
-            amount={expense.amount}
-          />
-        ))}
+      {expensesContent}
     </Card>
 
   )
